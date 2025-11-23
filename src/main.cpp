@@ -96,17 +96,7 @@ static struct {
 
     void move(void) noexcept {
         pos.x += velocity.x;
-        // if (pos.x <= radius) {
-        //     pos.x = radius;
-        // } else if (pos.x + radius >= window_width) {
-        //     pos.x = window_width - radius;
-        // }
         pos.y += velocity.y;
-        // if (pos.y <= radius) {
-        //     pos.y = radius;
-        // } else if (pos.y + radius >= window_height) {
-        //     pos.y = window_height - radius;
-        // }
     }
 } ball = {0};
 
@@ -169,6 +159,7 @@ int main(void) {
             {
                 // FIXME: This is not the correct way to handle collision between ball
                 // and a player. The ball may get stuck in one rectangle. Fix this!
+                // But it works for the most part!
                 for (i = 0; i < P_COUNT; i++) {
                     if (CheckCollisionCircleRec(ball.pos, ball.radius, players[i].rect))
                         ball.velocity.x *= -1;
@@ -221,9 +212,11 @@ int main(void) {
                 DrawText(score_buf, t_pos.x, t_pos.y, font_size, score_color);
             }
 
+            // Draw players
             for (i = 0; i < P_COUNT; i++)
                 DrawRectangleRec(players[i].rect, RAYWHITE);
 
+            // Draw ball
             DrawCircleV(ball.pos, ball.radius, RAYWHITE);
         }
         EndDrawing();
