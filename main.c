@@ -5,9 +5,9 @@
 
 // Type cast
 #ifdef __cplusplus
-    #define SC(T, V) (static_cast<T>((V)))
+    #define CAST(T, V) (static_cast<T>((V)))
 #else
-    #define SC(T, V) ((T)(V))
+    #define CAST(T, V) ((T)(V))
 #endif
 
 #define SCORE_BUF_SIZE (4)
@@ -64,8 +64,8 @@ static struct {
 static Player players[2] = {0};
 
 static inline void window_center(Vector2 *out) {
-    out->x = SC(float, window_width)/2;
-    out->y = SC(float, window_height)/2;
+    out->x = CAST(float, window_width)/2;
+    out->y = CAST(float, window_height)/2;
 }
 
 int randint(int min, int max) {
@@ -102,12 +102,12 @@ int main(void) {
 
         ball.velocity = (Vector2){
             .x = (time(NULL) & 1) ? -ball_x_velocity : ball_x_velocity,
-            .y = SC(float, yv)
+            .y = CAST(float, yv)
         };
         ball.radius = BALL_RADIUS;
 
-        rectangle_heigth = SC(float, window_height / 4);
-        const float rect_y_pos = SC(float, (window_height / 2) - (rectangle_heigth / 2));
+        rectangle_heigth = CAST(float, window_height / 4);
+        const float rect_y_pos = CAST(float, (window_height / 2) - (rectangle_heigth / 2));
 
         players[P_LEFT] = (Player){
             .rect = (Rectangle){
@@ -123,7 +123,7 @@ int main(void) {
 
         players[P_RIGHT] = (Player){
             .rect = (Rectangle){
-                SC(float, window_width - rectangle_width),
+                CAST(float, window_width - rectangle_width),
                 rect_y_pos,
                 rectangle_width,
                 rectangle_heigth,
