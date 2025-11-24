@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 project(
     pong
     VERSION 0.0.1
-    LANGUAGES CXX
+    LANGUAGES C
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
@@ -12,12 +12,11 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
       ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 
-set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(RAYLIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/raylib")
 
 add_executable(
     pong
-    "${SRC_DIR}/build.cpp"
+    "main.c"
 )
 
 target_link_directories(
@@ -30,8 +29,7 @@ target_link_libraries(pong PRIVATE raylib)
 target_include_directories(
     pong
     PRIVATE
-    "${SRC_DIR}"
     "${RAYLIB_DIR}/include"
 )
 
-set_property(TARGET pong PROPERTY CXX_STANDARD 20)
+set_property(TARGET pong PROPERTY C_STANDARD 11)

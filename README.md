@@ -1,5 +1,5 @@
 # Pong
-Very simple pong game written in C++20 and [Raylib](https://raylib.com).
+Very simple pong game written in C and [Raylib](https://raylib.com).
 
 ## Build
 Download raylib version 5.5 from [github releases](https://github.com/raysan5/raylib/releases/tag/5.5).
