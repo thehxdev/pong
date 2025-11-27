@@ -36,14 +36,14 @@ static const char window_name[] = "Pong!";
 static const int
     ball_y_velocity_range = 5, // ball Y velocity must be less than -5 or greater than 5
     font_size = 300,
+    rectangle_factor = 10,
     target_fps = 60;
 
 static const float
-    rectangle_velocity = 10.f,
+    player_velocity = 10.f,
     rectangle_width = 15.f,
     ball_x_velocity = 15.f,
-    window_scale = 0.8f,
-    player_velocity = 5.f;
+    window_scale = 0.8f;
 
 static Font default_font;
 
@@ -68,7 +68,7 @@ static inline void window_center(Vector2 *out) {
     out->y = CAST(float, window_height)/2;
 }
 
-int randint(int min, int max) {
+static inline int randint(int min, int max) {
     return (rand() % (max - min + 1)) + min;
 }
 
@@ -106,7 +106,7 @@ int main(void) {
         };
         ball.radius = BALL_RADIUS;
 
-        rectangle_heigth = CAST(float, window_height / 4);
+        rectangle_heigth = CAST(float, window_height / rectangle_factor);
         const float rect_y_pos = CAST(float, (window_height / 2) - (rectangle_heigth / 2));
 
         players[P_LEFT] = (Player){
@@ -142,11 +142,11 @@ int main(void) {
                 Player *p = &players[i];
                 float *rect_y_pos = &p->rect.y;
                 if (IsKeyDown(p->key_up)) {
-                    *rect_y_pos -= rectangle_velocity;
+                    *rect_y_pos -= player_velocity;
                     if (*rect_y_pos <= 0)
                         *rect_y_pos = 0;
                 } else if (IsKeyDown(p->key_down)) {
-                    *rect_y_pos += rectangle_velocity;
+                    *rect_y_pos += player_velocity;
                     if (*rect_y_pos >= (window_height - rectangle_heigth))
                         *rect_y_pos = (window_height - rectangle_heigth);
                 }
@@ -157,12 +157,15 @@ int main(void) {
 
             // Handle Collisions
             {
-                // FIXME: This is not the correct way to handle collision between ball
-                // and a player. The ball may get stuck in one rectangle. Fix this!
-                // But it works for the most part!
-                for (i = 0; i < P_COUNT; i++) {
-                    if (CheckCollisionCircleRec(ball.pos, ball.radius, players[i].rect))
-                        ball.velocity.x *= -1;
+                Rectangle *rect = &players[P_RIGHT].rect;
+                if (CheckCollisionCircleRec(ball.pos, ball.radius, *rect)) {
+                    ball.pos.x = rect->x - ball.radius;
+                    ball.velocity.x *= -1;
+                }
+                rect = &players[P_LEFT].rect;
+                if (CheckCollisionCircleRec(ball.pos, ball.radius, *rect)) {
+                    ball.pos.x = rect->x + rect->width + ball.radius;
+                    ball.velocity.x *= -1;
                 }
 
                 if (ball.pos.x <= ball.radius) {
