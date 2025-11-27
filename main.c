@@ -40,7 +40,7 @@ static const int
     target_fps = 60;
 
 static const float
-    player_velocity = 10.f,
+    player_velocity = 10.f, // up and down velocity of rectangles
     rectangle_width = 15.f,
     ball_x_velocity = 15.f,
     window_scale = 0.8f;
@@ -55,14 +55,6 @@ static int
     window_width = 0,
     window_height = 0;
 
-
-static struct {
-    Vector2 pos, velocity;
-    int radius;
-} ball = {0};
-
-static Player players[2] = {0};
-
 static inline void window_center(Vector2 *out) {
     out->x = CAST(float, window_width)/2;
     out->y = CAST(float, window_height)/2;
@@ -74,6 +66,12 @@ static inline int randint(int min, int max) {
 
 int main(void) {
     int i;
+    struct {
+        Vector2 pos, velocity;
+        int radius;
+    } ball = {0};
+    Player players[2] = {0};
+
     srand(time(NULL));
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(window_width, window_height, window_name);
