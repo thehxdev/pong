@@ -55,11 +55,6 @@ static int
     window_width = 0,
     window_height = 0;
 
-static inline void window_center(Vector2 *out) {
-    out->x = CAST(float, window_width)/2;
-    out->y = CAST(float, window_height)/2;
-}
-
 static inline int randint(int min, int max) {
     return (rand() % (max - min + 1)) + min;
 }
@@ -86,7 +81,7 @@ int main(void) {
 
     // Initialize world
     {
-        window_center(&ball.pos);
+        ball.pos = (Vector2){ CAST(float, window_width/2), CAST(float, window_height/2) };
 
         // Ball y axis velocity
         int yv = randint(-ball_y_velocity_range, ball_y_velocity_range);
