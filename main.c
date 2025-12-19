@@ -27,23 +27,23 @@ typedef struct {
 } Player;
 
 static const Color
-    background_color = {0x18, 0x18, 0x18, 0xff},
-    score_color = {0x44, 0x44, 0x4e, 0xff},
-    entities_color = RAYWHITE;
+    BACKGROUND_COLOR = {0x18, 0x18, 0x18, 0xff},
+    SCORE_COLOR = {0x44, 0x44, 0x4e, 0xff},
+    ENTITIES_COLOR = RAYWHITE;
 
-static const char window_name[] = "Pong!";
+static const char WINDOW_NAME[] = "Pong!";
 
 static const int
-    ball_y_velocity_range = 5, // ball Y velocity must be less than -5 or greater than 5
-    font_size = 300,
-    rectangle_factor = 10,
-    target_fps = 60;
+    BALL_Y_VELOCITY_RANGE = 5, // ball Y velocity must be less than -5 or greater than 5
+    FONT_SIZE = 300,
+    RECTANGLE_FACTOR = 10,
+    TARGET_FPS = 60;
 
 static const float
-    player_velocity = 10.f, // up and down velocity of rectangles
-    rectangle_width = 15.f,
-    ball_x_velocity = 15.f,
-    window_scale = 0.8f;
+    PLAYER_VELOCITY = 10.f, // up and down velocity of rectangles
+    RECTANGLE_WIDTH = 15.f,
+    BALL_X_VELOCITY = 15.f,
+    WINDOW_SCALE = 0.8f;
 
 static Font default_font;
 
@@ -69,44 +69,44 @@ int main(void) {
 
     srand(time(NULL));
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(window_width, window_height, window_name);
+    InitWindow(window_width, window_height, WINDOW_NAME);
 
     monitor_id = GetCurrentMonitor();
-    window_width = GetMonitorWidth(monitor_id) * window_scale;
-    window_height = GetMonitorHeight(monitor_id) * window_scale;
+    window_width = GetMonitorWidth(monitor_id) * WINDOW_SCALE;
+    window_height = GetMonitorHeight(monitor_id) * WINDOW_SCALE;
     default_font = GetFontDefault();
 
     SetWindowSize(window_width, window_height);
-    SetTargetFPS(target_fps);
+    SetTargetFPS(TARGET_FPS);
 
     // Initialize world
     {
         ball.pos = (Vector2){ CAST(float, window_width/2), CAST(float, window_height/2) };
 
         // Ball y axis velocity
-        int yv = randint(-ball_y_velocity_range, ball_y_velocity_range);
-        if (yv > (-ball_y_velocity_range) && yv < ball_y_velocity_range) {
+        int yv = randint(-BALL_Y_VELOCITY_RANGE, BALL_Y_VELOCITY_RANGE);
+        if (yv > (-BALL_Y_VELOCITY_RANGE) && yv < BALL_Y_VELOCITY_RANGE) {
             if (yv >= 0) {
-                yv += ball_y_velocity_range;
+                yv += BALL_Y_VELOCITY_RANGE;
             } else {
-                yv -= ball_y_velocity_range;
+                yv -= BALL_Y_VELOCITY_RANGE;
             }
         }
 
         ball.velocity = (Vector2){
-            .x = (time(NULL) & 1) ? -ball_x_velocity : ball_x_velocity,
+            .x = (time(NULL) & 1) ? -BALL_X_VELOCITY : BALL_X_VELOCITY,
             .y = CAST(float, yv)
         };
         ball.radius = BALL_RADIUS;
 
-        rectangle_heigth = CAST(float, window_height / rectangle_factor);
+        rectangle_heigth = CAST(float, window_height / RECTANGLE_FACTOR);
         const float rect_y_pos = CAST(float, (window_height / 2) - (rectangle_heigth / 2));
 
         players[P_LEFT] = (Player){
             .rect = (Rectangle){
                 0.f,
                 rect_y_pos,
-                rectangle_width,
+                RECTANGLE_WIDTH,
                 rectangle_heigth,
             },
             .score = 0,
@@ -116,9 +116,9 @@ int main(void) {
 
         players[P_RIGHT] = (Player){
             .rect = (Rectangle){
-                CAST(float, window_width - rectangle_width),
+                CAST(float, window_width - RECTANGLE_WIDTH),
                 rect_y_pos,
-                rectangle_width,
+                RECTANGLE_WIDTH,
                 rectangle_heigth,
             },
             .score = 0,
@@ -135,11 +135,11 @@ int main(void) {
                 Player *p = &players[i];
                 float *rect_y_pos = &p->rect.y;
                 if (IsKeyDown(p->key_up)) {
-                    *rect_y_pos -= player_velocity;
+                    *rect_y_pos -= PLAYER_VELOCITY;
                     if (*rect_y_pos <= 0)
                         *rect_y_pos = 0;
                 } else if (IsKeyDown(p->key_down)) {
-                    *rect_y_pos += player_velocity;
+                    *rect_y_pos += PLAYER_VELOCITY;
                     if (*rect_y_pos >= (window_height - rectangle_heigth))
                         *rect_y_pos = (window_height - rectangle_heigth);
                 }
@@ -188,7 +188,7 @@ int main(void) {
         // Draw
         BeginDrawing();
         {
-            ClearBackground(background_color);
+            ClearBackground(BACKGROUND_COLOR);
             DrawFPS(10, 10);
 
             // Draw scores
@@ -197,15 +197,15 @@ int main(void) {
                 char score_buf[SCORE_BUF_SIZE] = {0};
 
                 snprintf(score_buf, sizeof(score_buf), "%d", players[P_LEFT].score);
-                t_size = MeasureTextEx(default_font, score_buf, font_size, 0);
+                t_size = MeasureTextEx(default_font, score_buf, FONT_SIZE, 0);
                 t_pos.x = (window_width/4) - (t_size.x/2);
                 t_pos.y = (window_height/2) - (t_size.y/2);
-                DrawText(score_buf, t_pos.x, t_pos.y, font_size, score_color);
+                DrawText(score_buf, t_pos.x, t_pos.y, FONT_SIZE, SCORE_COLOR);
 
                 snprintf(score_buf, sizeof(score_buf), "%d", players[P_RIGHT].score);
-                t_size = MeasureTextEx(default_font, score_buf, font_size, 0);
+                t_size = MeasureTextEx(default_font, score_buf, FONT_SIZE, 0);
                 t_pos.x = (window_width * .75f) - (t_size.x/2);
-                DrawText(score_buf, t_pos.x, t_pos.y, font_size, score_color);
+                DrawText(score_buf, t_pos.x, t_pos.y, FONT_SIZE, SCORE_COLOR);
             }
 
             // Draw players
